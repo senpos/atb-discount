@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base target="_blank">
+    <link href="/style.css" rel="stylesheet" type="text/css">
+    <title>Знижки АТБ</title>
+</head>
+<body>
+<div class="content">
+    <div class="cards">
+        {{range .Items}}
+            <div class="card">
+                <div class="card-cover">
+                    <a href="{{.URL}}"><img src="{{.ImageURL}}" alt="{{.Title}}" loading="lazy"></a>
+                </div>
+                <div class="card-description">
+                    <div class="current-price">
+                        <b{{if .Discount}} class="discounted-price" {{end}}>{{.CurrentPrice}}</b>
+                        <small>{{.Unit}}</small>
+                    </div>
+                    <p class="discount">{{if .Discount}}- {{.Discount}}% {{else}} -{{end}}</p>
+                    <s class="old-price">{{or .OldPrice "-"}}</s>
+                    <a class="title" href="{{.URL}}">{{.Title}}</a>
+                </div>
+            </div>
+        {{end}}
+    </div>
+</div>
+</body>
+</html>
