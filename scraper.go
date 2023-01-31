@@ -100,6 +100,16 @@ func (s *Server) parsePage(html string) ([]DiscountItem, error) {
 
 	var items []DiscountItem
 	doc.Find(".catalog-item").Each(func(_ int, selector *goquery.Selection) {
+		priceNode := selector.Find(".catalog-item__product-price").First()
+		if !priceNode.HasClass("product-price--sale") {
+			return
+		}
+
+		oldPrice, _ := strconv.ParseFloat(priceNode.Find(".product-price__bottom").First().AttrOr("value", "0"), 64)
+		currentPrice, _ := strconv.ParseFloat(priceNode.Find(".product-price__top").First().AttrOr("value", "0"), 64)
+		discount := int(math.Round((oldPrice - currentPrice) / oldPrice * 100))
+		unit := strings.TrimSpace(priceNode.Find("abbr.product-price__currency-abbr").First().Text())
+
 		titleNode := selector.Find(".catalog-item__title > a").First()
 		title := strings.TrimSpace(titleNode.Text())
 		url := titleNode.AttrOr("href", "")
@@ -107,20 +117,7 @@ func (s *Server) parsePage(html string) ([]DiscountItem, error) {
 			url = s.ATBBaseURL + url
 		}
 		imageURL := selector.Find(".catalog-item__img").First().AttrOr("src", "")
-
-		priceNode := selector.Find(".catalog-item__product-price").First()
-		currentPrice, _ := strconv.ParseFloat(priceNode.Find(".product-price__top").First().AttrOr("value", "0"), 64)
-		unit := strings.TrimSpace(priceNode.Find("abbr.product-price__currency-abbr").First().Text())
-
-		var discount int
-		var oldPrice float64
-		if priceNode.HasClass("product-price--sale") {
-			oldPrice, _ = strconv.ParseFloat(priceNode.Find(".product-price__bottom").First().AttrOr("value", "0"), 64)
-			discount = int(math.Round((oldPrice - currentPrice) / oldPrice * 100))
-		} else {
-			oldPrice = 0
-			discount = 0
-		}
+		
 		item := DiscountItem{
 			Title:        title,
 			URL:          url,

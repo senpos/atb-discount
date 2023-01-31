@@ -17,11 +17,11 @@
                 </div>
                 <div class="card-description">
                     <div class="current-price">
-                        <b{{if .Discount}} class="discounted-price" {{end}}>{{.CurrentPrice}}</b>
+                        <b class="discounted-price">{{.CurrentPrice}}</b>
                         <small>{{.Unit}}</small>
                     </div>
-                    <p class="discount">{{if .Discount}}- {{.Discount}}% {{else}} -{{end}}</p>
-                    <s class="old-price">{{or .OldPrice "-"}}</s>
+                    <p class="discount">- {{.Discount}}%</p>
+                    <s class="old-price">{{.OldPrice}}</s>
                     <a class="title" href="{{.URL}}">{{.Title}}</a>
                 </div>
             </div>
