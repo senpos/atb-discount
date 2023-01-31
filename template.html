@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <base target="_blank">
     <link href="/style.css" rel="stylesheet" type="text/css">
     <title>Знижки АТБ</title>
 </head>
@@ -11,9 +10,9 @@
 <div class="content">
     <div class="cards">
         {{range .Items}}
-            <div class="card">
+            <div id="{{.ID}}" class="card">
                 <div class="card-cover">
-                    <a href="{{.URL}}"><img src="{{.ImageURL}}" alt="{{.Title}}" loading="lazy"></a>
+                    <a href="#{{.ID}}"><img src="{{.ImageURL}}" alt="{{.Title}}" loading="lazy"></a>
                 </div>
                 <div class="card-description">
                     <div class="current-price">
@@ -22,7 +21,7 @@
                     </div>
                     <p class="discount">- {{.Discount}}%</p>
                     <s class="old-price">{{.OldPrice}}</s>
-                    <a class="title" href="{{.URL}}">{{.Title}}</a>
+                    <a class="title" href="{{.URL}}" target="_blank">{{.Title}}</a>
                 </div>
             </div>
         {{end}}

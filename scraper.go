@@ -21,6 +21,7 @@ type DiscountPageResponse struct {
 }
 
 type DiscountItem struct {
+	ID           string  `json:"id"`
 	Title        string  `json:"title"`
 	URL          string  `json:"url"`
 	ImageURL     string  `json:"imageUrl"`
@@ -112,13 +113,14 @@ func (s *Server) parsePage(html string) ([]DiscountItem, error) {
 
 		titleNode := selector.Find(".catalog-item__title > a").First()
 		title := strings.TrimSpace(titleNode.Text())
-		url := titleNode.AttrOr("href", "")
-		if url != "" {
-			url = s.ATBBaseURL + url
-		}
+		href := titleNode.AttrOr("href", "")
+		url := s.ATBBaseURL + href
+		parts := strings.Split(href, "/")
+		id := parts[len(parts)-1]
 		imageURL := selector.Find(".catalog-item__img").First().AttrOr("src", "")
-		
+
 		item := DiscountItem{
+			ID:           id,
 			Title:        title,
 			URL:          url,
 			ImageURL:     imageURL,
