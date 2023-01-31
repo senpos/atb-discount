@@ -11,6 +11,8 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/didip/tollbooth/v7"
+	"github.com/didip/tollbooth_chi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/stampede"
@@ -55,8 +57,11 @@ func (s *Server) Run(_ context.Context, addr string) error {
 
 func (s *Server) router() *chi.Mux {
 	router := chi.NewRouter()
+	router.Use(middleware.RealIP)
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.Compress(5))
+	router.Use(middleware.Throttle(1000))
+	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(5, nil)))
 	router.Use(middleware.Heartbeat("/ping"))
 
 	router.Get("/api", s.getDiscountItemsAPICtrl)
