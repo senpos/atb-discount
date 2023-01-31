@@ -46,6 +46,10 @@ body {
     --border-color: #2098D1;
 }
 
+.card:target {
+    --border-color: #E473D2;
+}
+
 .card-cover {
     border-bottom: 4px solid var(--border-color);
     min-height: 10em;
